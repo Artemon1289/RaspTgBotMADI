@@ -6,8 +6,10 @@ import bs4
 import requests
 
 WEEK_URL = "https://raspisanie.madi.ru/tplan/calendar.php"
-GROUPS_URL = "https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php"  # get запрос, для получения списка групп
-TABLE_URL = "https://raspisanie.madi.ru/tplan/tasks/tableFiller.php"  # post запрос, для получения списка расписания
+# get запрос, для получения списка групп
+GROUPS_URL = "https://raspisanie.madi.ru/tplan/tasks/task3,7_fastview.php"
+# post запрос, для получения списка расписания
+TABLE_URL = "https://raspisanie.madi.ru/tplan/tasks/tableFiller.php"
 
 table = {}
 
@@ -58,7 +60,8 @@ def get_rasp(group_id):
     request = requests.post(TABLE_URL, data=ast.literal_eval(cur_data))
 
     # Находим фрагмент с расписанием
-    table_soup = bs4.BeautifulSoup(request.text, "html.parser").select_one(".timetable")
+    table_soup = bs4.BeautifulSoup(request.text, "html.parser").select_one(
+        ".timetable")
 
     # table_soup = table_soup.find_all("td", {"colspan": True})
     # print(table_soup)
@@ -141,7 +144,8 @@ def main(group_name="1мбд", week_day=0, shift=None):
 
     # Проверяем нашли ли мы расписание на сайте
     if table_rasp is None:
-        message = "Не удалось получить расписание с сайта.\nПроверьте выложили ли его?\n"
+        message = """Не удалось получить расписание с сайта.\nПроверьте 
+        выложили ли его?\n"""
         message += "https://raspisanie.madi.ru/tplan/r/?task=7"
         return message
         pass

@@ -8,7 +8,10 @@ import parser
 # Enable logging
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-# Set higher logging level for httpx to avoid all GET and POST requests being logged
+'''
+Set higher logging level for httpx to avoid all GET
+    and POST requests being logged
+'''
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
@@ -50,8 +53,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             InlineKeyboardButton("СБ", callback_data="saturday"),
         ],
         [
-            InlineKeyboardButton(f"Текущий тип недели", callback_data="set_cur_week_type"),
-            InlineKeyboardButton(f"{week_type}", callback_data="change_week_type"),
+            InlineKeyboardButton(f"Текущий тип недели",
+                                 callback_data="set_cur_week_type"),
+            InlineKeyboardButton(f"{week_type}",
+                                 callback_data="change_week_type"),
         ],
         [
             InlineKeyboardButton("Настройки", callback_data="settings"),
@@ -60,7 +65,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text("Выберите опцию:", reply_markup=reply_markup)
+    await update.message.reply_text("Выберите опцию:",
+                                    reply_markup=reply_markup)
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -77,7 +83,8 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_reply_markup(
             InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton("ПЗВЧР", callback_data="day_before_yesterday"),
+                    [InlineKeyboardButton("ПЗВЧР",
+                                          callback_data="day_before_yesterday"),
                      InlineKeyboardButton("Вчера", callback_data="yesterday"),
                      InlineKeyboardButton("Сегодня", callback_data="today"),
                      InlineKeyboardButton("Завтра", callback_data="tomorrow"),
@@ -101,20 +108,28 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await query.edit_message_reply_markup(
                 InlineKeyboardMarkup(
                     [
-                        [InlineKeyboardButton("ПЗВЧР", callback_data="day_before_yesterday"),
-                         InlineKeyboardButton("Вчера", callback_data="yesterday"),
-                         InlineKeyboardButton("Сегодня", callback_data="today"),
-                         InlineKeyboardButton("Завтра", callback_data="tomorrow"),
-                         InlineKeyboardButton("ПЗВТР", callback_data="day_after_tomorrow")],
+                        [InlineKeyboardButton("ПЗВЧР",
+                                              callback_data="day_before_yesterday"),
+                         InlineKeyboardButton("Вчера",
+                                              callback_data="yesterday"),
+                         InlineKeyboardButton("Сегодня",
+                                              callback_data="today"),
+                         InlineKeyboardButton("Завтра",
+                                              callback_data="tomorrow"),
+                         InlineKeyboardButton("ПЗВТР",
+                                              callback_data="day_after_tomorrow")],
                         [InlineKeyboardButton("ПН", callback_data="monday"),
                          InlineKeyboardButton("ВТ", callback_data="tuesday"),
                          InlineKeyboardButton("СР", callback_data="wednesday"),
                          InlineKeyboardButton("ЧТ", callback_data="thursday"),
                          InlineKeyboardButton("ПТ", callback_data="friday"),
                          InlineKeyboardButton("СБ", callback_data="saturday")],
-                        [InlineKeyboardButton("Текущий тип недели", callback_data="set_cur_week_type"),
-                         InlineKeyboardButton(f"{week_type}", callback_data="change_week_type"), ],
-                        [InlineKeyboardButton("Настройки", callback_data="settings")],
+                        [InlineKeyboardButton("Текущий тип недели",
+                                              callback_data="set_cur_week_type"),
+                         InlineKeyboardButton(f"{week_type}",
+                                              callback_data="change_week_type"), ],
+                        [InlineKeyboardButton("Настройки",
+                                              callback_data="settings")],
                     ]
                 )
             )
@@ -124,9 +139,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_text(text=f"Вы выбрали: {query.data}")
 
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help_command(update: Update,
+                       context: ContextTypes.DEFAULT_TYPE) -> None:
     """Displays info on how to use the bot."""
-    await update.message.reply_text("Используйте /start для начала работы с ботом.")
+    await update.message.reply_text("""Используйте /start для
+                                     начала работы с ботом.""")
 
 
 def main() -> None:
