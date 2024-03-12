@@ -134,7 +134,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 )
             )
     elif query.data == "settings":
-        await query.edit_message_text(text="Открываю настройки...")
+        await query.edit_message_text(text="Открываются настройки...")
     else:
         await query.edit_message_text(text=f"Вы выбрали: {query.data}")
 
