@@ -1,4 +1,4 @@
-/main_token.txt
-/test_token.txt
+/src/main_token.txt
 venv/
 .idea/
+/src/test_token.txt
