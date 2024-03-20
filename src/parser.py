@@ -1,5 +1,4 @@
 import ast
-import datetime
 import json
 
 import bs4
@@ -208,7 +207,7 @@ def main(group_name="1мБД", day=0, week_type=""):
     message += "\n"
 
     if day_rasp == "":
-        message += "Пар нет"
+        message += "На выбранный день пар нет"
     else:
         message += day_rasp
 
