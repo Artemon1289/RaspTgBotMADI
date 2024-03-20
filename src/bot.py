@@ -149,7 +149,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             shift_day = datetime.datetime.now().weekday() + 2
         else:
             shift_day = datetime.datetime.now().weekday()
-        mes = parser.main(day=shift_day, week_type=week_type)
+        mes = parser.main(day=shift_day)
         await query.edit_message_text(mes,
                                       reply_markup=InlineKeyboardMarkup(
                                           [[InlineKeyboardButton("Назад", callback_data="change_week_type")]]))
