@@ -96,18 +96,22 @@ def get_table(group_id):
     pass
 
 
-def get_week_type():
+def get_week_type(switch):
     req = requests.get(WEEK_URL)
-    if "\\u0447" in req.text:
-        return "Числитель"
-    if "\\u0437" in req.text:
-        return "Знаменатель"
+    if not switch:
+        if "\\u0447" in req.text:
+            return "Числитель"
+        if "\\u0437" in req.text:
+            return "Знаменатель"
     else:
-        return "ЧЗХ"
-    pass
+        if "\\u0447" in req.text:
+            return "Знаменатель"
+        if "\\u0437" in req.text:
+            return "Числитель"
 
 
 def get_weekday(weekday):
+    weekday %= 7
     if weekday == 0:
         return "Понедельник"
     elif weekday == 1:
@@ -127,10 +131,10 @@ def get_weekday(weekday):
 
 def get_lines_between_strings(soup, day):
     # Получаем день недели
-    string_begin = get_weekday(day)  # Убрать остатки shift логики из функции
+    string_begin = get_weekday(day)
 
     # Получаем следующий день недели
-    string_end = get_weekday(day + 1)  # Убрать остатки shift логики из функции
+    string_end = get_weekday(day + 1)
 
     text = str(soup)
     lines = []
@@ -157,7 +161,7 @@ def remove_target_strings(text, target_string):
     return "\n".join(result)
 
 
-def main(group_name="1мБД", day=None, week_type=None):
+def main(group_name="1мБД", day=None, week_type=None, switch_wt=False):
 
     if group_name is None:
         return "Настройте название группы"
@@ -183,7 +187,7 @@ def main(group_name="1мБД", day=None, week_type=None):
 
     # Получаем тип недели
     if week_type is None:
-        week_type = get_week_type()
+        week_type = get_week_type(switch_wt)
 
     # создаём словарь групп
     # ключ - id

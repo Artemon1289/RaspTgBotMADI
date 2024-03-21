@@ -56,7 +56,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         except Exception as e:
             print(e)
     elif query.data == "set_cur_week_type":
-        new_week_type = parser.get_week_type()
+        new_week_type = parser.get_week_type(switch=False)
         if week_type != new_week_type:
             week_type = new_week_type
             await query.edit_message_reply_markup(get_menu_keyboard())
@@ -66,21 +66,46 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         mes = parser.main(group_name=group, day=int(query.data), week_type=week_type)
         await query.edit_message_text(mes, reply_markup=back_key)
     else:
+        today_wd = datetime.datetime.now().weekday()
         if query.data == "ПЗВЧР":
-            shift_day = datetime.datetime.now().weekday() - 2
+            shift_day = today_wd - 2
+            if today_wd == 0 or today_wd == 1:
+                sw = True
+            else:
+                sw = False
+
         elif query.data == "Вчера":
-            shift_day = datetime.datetime.now().weekday() - 1
+            shift_day = today_wd - 1
+            if today_wd == 0:
+                sw = True
+            else:
+                sw = False
+
         elif query.data == "Завтра":
-            shift_day = datetime.datetime.now().weekday() + 1
+            shift_day = today_wd + 1
+            if today_wd == 6:
+                sw = True
+            else:
+                sw = False
+
         elif query.data == "ПЗВТР":
-            shift_day = datetime.datetime.now().weekday() + 2
+            shift_day = today_wd + 2
+            if today_wd == 5 or today_wd == 6:
+                sw = True
+            else:
+                sw = False
         else:
-            shift_day = datetime.datetime.now().weekday()
+            shift_day = today_wd
+            sw = False
+
         if shift_day == 6:
             mes = "По воскресеньям не учимся"
         else:
-            mes = parser.main(group_name=group, day=shift_day)
-        await query.edit_message_text(mes, reply_markup=back_key)
+            mes = parser.main(group_name=group, day=shift_day, switch_wt=sw)
+        try:
+            await query.edit_message_text(mes, reply_markup=back_key)
+        except Exception as e:
+            print(e)
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
