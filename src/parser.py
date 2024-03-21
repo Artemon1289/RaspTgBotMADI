@@ -157,11 +157,32 @@ def remove_target_strings(text, target_string):
     return "\n".join(result)
 
 
-def main(group_name="1мБД", day=0, week_type=""):
-    group_name = group_name.lower()
+def main(group_name="1мБД", day=None, week_type=None):
+
+    if group_name is None:
+        return "Настройте название группы"
+    else:
+        group_name = group_name.lower()
+
+    if day is None and week_type is None:
+        # создаём словарь групп
+        # ключ - id
+        # значение - название группы
+        groups_dict = get_groups_dict()
+
+        if groups_dict == -1:
+            return -1
+
+        # Берём id группы по названию группы из словаря групп
+        group_id = get_group_id(group_name, groups_dict)
+
+        if group_id == -1:
+            return 0
+        else:
+            return 1
 
     # Получаем тип недели
-    if week_type == "":
+    if week_type is None:
         week_type = get_week_type()
 
     # создаём словарь групп

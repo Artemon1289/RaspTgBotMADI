@@ -3,7 +3,7 @@ import logging
 import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, MessageHandler, filters
 
 import parser
 
@@ -12,7 +12,7 @@ week_type = "Числитель"
 
 back_key = InlineKeyboardMarkup([[InlineKeyboardButton("Назад", callback_data="change_week_type")]])
 
-group = ""
+group = None
 
 # Enable logging
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -42,6 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Parses the CallbackQuery and updates the message text."""
     global week_type  # Делаем week_type глобальной переменной
+    global group
 
     query = update.callback_query
     await query.answer()
@@ -60,9 +61,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             week_type = new_week_type
             await query.edit_message_reply_markup(get_menu_keyboard())
     elif query.data == "settings":
-        await query.edit_message_text(text="Введите группу", reply_markup=back_key)
+        await query.edit_message_text(text="Введите название группы:", reply_markup=back_key)
     elif query.data.isnumeric():
-        mes = parser.main(day=int(query.data), week_type=week_type)
+        mes = parser.main(group_name=group, day=int(query.data), week_type=week_type)
         await query.edit_message_text(mes, reply_markup=back_key)
     else:
         if query.data == "ПЗВЧР":
@@ -75,8 +76,28 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             shift_day = datetime.datetime.now().weekday() + 2
         else:
             shift_day = datetime.datetime.now().weekday()
-        mes = parser.main(day=shift_day)
+        if shift_day == 6:
+            mes = "По воскресеньям не учимся"
+        else:
+            mes = parser.main(group_name=group, day=shift_day)
         await query.edit_message_text(mes, reply_markup=back_key)
+
+
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    global group
+
+    group = update.message.text
+
+    answ = parser.main(group_name=group)
+    if answ == -1:
+        mes = "Не удалось проверить группу, попробуйте позже"
+        group = None
+    elif answ == 0:
+        mes = "Не удалось найти группу " + group
+        group = None
+    else:
+        mes = "Группа успешно сохранена: " + group
+    await update.message.reply_text(text=mes, reply_markup=back_key)
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -88,6 +109,9 @@ def main() -> None:
     """Run the bot."""
     # Create the Application and pass it your bot's token.
     application = Application.builder().token(TOKEN).build()
+
+    # on non command i.e message - echo the message on Telegram
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CallbackQueryHandler(button))
