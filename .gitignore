@@ -3,3 +3,4 @@ venv/
 .idea/
 /src/test_token.txt
 /src/user_data.db
+/src/groups_log.txt
