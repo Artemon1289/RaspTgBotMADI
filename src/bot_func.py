@@ -12,7 +12,7 @@ back_key = InlineKeyboardMarkup([[InlineKeyboardButton("Назад", callback_da
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a message with multiple inline buttons attached."""
-    await update.message.reply_text("Выберите опцию:", reply_markup=get_menu_keyboard())
+    await update.message.reply_text("Выбери опцию:", reply_markup=get_menu_keyboard())
 
 
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -116,7 +116,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Displays info on how to use the bot."""
-    await update.message.reply_text("""Используйте /start для начала работы с ботом.""")
+    await update.message.reply_text("""Привет, я бот. Могу помочь тебе с расписанием.
+    Используй /start для начала работы с ботом.""")
 
 
 def get_menu_keyboard():
