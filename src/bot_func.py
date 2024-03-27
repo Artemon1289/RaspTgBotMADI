@@ -152,4 +152,4 @@ def get_menu_keyboard():
 
 async def log(user_id, group, function):
     with open('groups_log.txt', 'a') as f:
-        f.write(f'{user_id} - {group} - {function} - {datetime.datetime.now()}\n')
+        f.write(f'{user_id}\t-\t{group}\t-\t{function}\t-\t{datetime.datetime.now()}\n')
