@@ -99,7 +99,7 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    group_msg = update.message.text
+    group_msg = update.message.text.lower()
 
     answer = parser.main(group_name=group_msg)
     if answer == -1:
